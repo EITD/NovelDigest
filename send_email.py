@@ -58,7 +58,6 @@ def main(types):
     parser.add_argument("--dry-run", action="store_true", help="print the email body instead of sending")
     args = parser.parse_args()
 
-    types = [t.strip() for t in types.split(",") if t.strip()]
     sections_text = []
     sections_html = []
 
