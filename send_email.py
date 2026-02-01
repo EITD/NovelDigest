@@ -1,18 +1,3 @@
-#!/usr/bin/env python3
-"""Send gb_novels.json via QQ mail using yagmail.
-
-Requirements:
-  pip install yagmail
-
-Usage:
-  Dry-run (print body):
-    python3 send_gb_novels_email.py --dry-run
-
-  Send to QQ mailbox (set env or use --to):
-    export SMTP_USER=your_qq_email@qq.com
-    export SMTP_PASS=your_qq_smtp_app_password
-    python3 send_gb_novels_email.py --to recipient@qq.com --subject "GB Novels"
-"""
 import os
 import sys
 import json
@@ -70,9 +55,6 @@ def send_via_yagmail(user, password, text_body, html_body):
 
 def main(types):
     parser = argparse.ArgumentParser()
-    # parser.add_argument("--to", help="recipient email address")
-    # parser.add_argument("--subject", default="GB Novels Update")
-    # parser.add_argument("--json", default="gb_novels.json", help="path to gb_novels.json")
     parser.add_argument("--dry-run", action="store_true", help="print the email body instead of sending")
     args = parser.parse_args()
 
@@ -97,7 +79,11 @@ def main(types):
     # join HTML sections with a horizontal rule
     combined_html = "<hr/>".join(sections_html)
 
-    load_dotenv("config.env")
+    if os.path.exists("config.env"):
+        try:
+            load_dotenv("config.env", override=False)
+        except TypeError:
+            load_dotenv("config.env")
     smtp_user = os.environ.get("QQ_EMAIL")
     smtp_pass = os.environ.get("QQ_PASS")
 

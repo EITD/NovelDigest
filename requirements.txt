@@ -1,0 +1,5 @@
+python-dotenv
+yagmail
+requests
+beautifulsoup4
+google-genai

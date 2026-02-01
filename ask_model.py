@@ -2,12 +2,16 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 import pathlib
+import os
 import re
 import json
 import time
 
-
-load_dotenv("config.env")
+if os.path.exists("config.env"):
+    try:
+        load_dotenv("config.env", override=False)
+    except TypeError:
+        load_dotenv("config.env")
 client = genai.Client()
 
 def ask_model(path, prompt):
