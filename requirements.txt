@@ -3,3 +3,4 @@ yagmail
 requests
 beautifulsoup4
 google-genai
+playwright

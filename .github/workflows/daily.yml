@@ -22,16 +22,28 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run scraper
+      - name: Run jjwxc scraper
+        env:
+          NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
         run: python3 jjwxc_scraper.py
+
+      - name: Install Playwright browsers
+        run: python -m playwright install --with-deps chromium
+
+      - name: Run cp scraper
+        env:
+          NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
+        run: python3 cp_scraper.py
 
       - name: Run model extraction
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
         run: python3 ask_model.py
 
       - name: Send combined email
         env:
           QQ_EMAIL: ${{ secrets.QQ_EMAIL }}
           QQ_PASS: ${{ secrets.QQ_PASS }}
+          NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
         run: python3 send_email.py
