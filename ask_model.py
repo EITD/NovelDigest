@@ -6,6 +6,9 @@ import os
 import re
 import json
 import time
+from novel import load_data
+
+novels = load_data()  # Dict[str, Novel]
 
 if os.path.exists("config.env"):
     try:
@@ -15,21 +18,26 @@ if os.path.exists("config.env"):
 client = genai.Client()
 
 def ask_model(path, prompt):
-    filepath = pathlib.Path(path)
+    p = pathlib.Path(path)
 
-    response = client.models.generate_content(
-    model="gemini-3-flash-preview",
-    contents=[
-        types.Part.from_bytes(
-            data=filepath.read_bytes(),
-            mime_type='application/json',
-        ),
-        prompt
-    ]
-    )
-    return response.text
+    if p.is_dir():
+        files = sorted([x for x in p.iterdir() if x.is_file() and x.suffix.lower() == ".json"])
+        for f in files:
+            print(f"  Sending {f} to model...")
+            resp = client.models.generate_content(
+                model="gemini-3-flash-preview",
+                contents=[
+                    types.Part.from_bytes(
+                        data=f.read_bytes(),
+                        mime_type='application/json',
+                    ),
+                    prompt,
+                ],
+            )
+            save_response(resp.text, type, f.name)
+            time.sleep(60)
 
-def save_response(text, type):
+def save_response(text, type, filename):
     # Validate each non-empty line matches the exact pattern {title:'', author:'', intro:''}
     pattern = re.compile(r"^\{title:'(?P<title>.*?)',\s*author:'(?P<author>.*?)',\s*intro:'(?P<intro>.*?)'\}$")
     records = []
@@ -54,19 +62,11 @@ def save_response(text, type):
             print(f"{ln}: {content}")
         print('No file written. Please ensure the model output strictly uses the format {title:\'..\', author:\'..\', intro:\'..\'} with single quotes as shown.')
     else:
-        out_path = pathlib.Path(f'selected_novels_{type}.json')
+        out_path = pathlib.Path(f'{type}/selected_{filename}')
         out_path.write_text(json.dumps(records, ensure_ascii=False, indent=2))
         print(f"Saved {len(records)} records to {out_path}")
 
-def main(type, prompt):
-    path = f"./novels_{type}.json"
-    response_text = ask_model(path, prompt)
-    print("Model response received. Processing...")
-    save_response(response_text, type)
 
 if __name__ == "__main__":
-    gb_prompt = "筛选出所有gb小说，将标题、作者、简介提取出来，每行为一条记录，格式为{title:'', author:'', intro:''}，不要包含其他内容。"
-    main("gb", gb_prompt)
-    time.sleep(60)
-    mq_prompt = "筛选出所有攻受属性为美强、强强的小说，将标题、作者、简介提取出来，每行为一条记录，格式为{title:'', author:'', intro:''}，不要包含其他内容。"
-    main("mq", mq_prompt)
+    for type, novel in novels.items():
+        response_text = ask_model(f"{type}/", novel.prompt)

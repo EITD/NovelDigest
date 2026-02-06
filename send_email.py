@@ -3,12 +3,10 @@ import sys
 import json
 import argparse
 from dotenv import load_dotenv
+import yagmail
+from novel import load_data
 
-try:
-    import yagmail
-except Exception:
-    yagmail = None
-
+novels = load_data()  # Dict[str, Novel]
 
 def load_novels(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -62,17 +60,20 @@ def main(types):
     sections_html = []
 
     for t in types:
-        path = f"selected_novels_{t}.json"
-        if not os.path.exists(path):
-            continue
-        novels = load_novels(path)
-        title = f"{t.upper()} Novels"
-        sections_text.append(format_text(novels, title=title))
-        sections_html.append(format_html(novels, title=title))
+        # look for selected files inside the type directory first
+        type_dir = str(t)
+        found = []
+        if os.path.isdir(type_dir):
+            for fname in sorted(os.listdir(type_dir)):
+                if fname.startswith("selected") and fname.endswith(".json"):
+                    found.append(os.path.join(type_dir, fname))
 
-    if not sections_text:
-        print("No selected_novels_{type}.json files found for types:", types, file=sys.stderr)
-        sys.exit(1)
+        for path in found:
+            books = load_novels(path)
+            basename = os.path.splitext(os.path.basename(path))[0]
+            title = f"{t} {basename}"
+            sections_text.append(format_text(books, title=title))
+            sections_html.append(format_html(books, title=title))
 
     combined_text = "\n\n".join(sections_text)
     # join HTML sections with a horizontal rule
@@ -101,4 +102,4 @@ def main(types):
     print("Email sent.")
 
 if __name__ == "__main__":
-    main(["gb", "mq"])
+    main(novels.keys())

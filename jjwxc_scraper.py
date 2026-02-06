@@ -1,11 +1,13 @@
-import sys
+import os
 import requests
 from bs4 import BeautifulSoup
 import json
 import time
 import random
 from urllib.parse import urlparse, parse_qs
+from novel import load_data
 
+novels = load_data() # Dict[str, Novel]
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -121,7 +123,7 @@ def scrape_novel(url):
     return novel
 
 
-def main(base_url, type, pages=10):
+def main(base_url, type, pages=3):
     novels = []
     for page_num in range(1, pages + 1):
         url = f"{base_url}&page={page_num}"
@@ -143,18 +145,13 @@ def main(base_url, type, pages=10):
             continue
 
    # Save to JSON
-    with open(f"novels_{type}.json", "w", encoding="utf-8") as f:
+    if not os.path.exists(type):
+        os.makedirs(type)
+    with open(f"{type}/novels_jj.json", "w", encoding="utf-8") as f:
         json.dump(novels, f, ensure_ascii=False, indent=2)
 
-    print(f"Scraping completed. Data saved to ./novels_{type}.json")
-
+    print(f"Scraping completed. Data saved to {type}/novels_jj.json")
 
 if __name__ == "__main__":
-    try:
-        gb_url = "https://www.jjwxc.net/bookbase.php?xx=1&sortType=1"
-        mq_url = "https://www.jjwxc.net/bookbase.php?xx=2&mainview=3&sortType=1"
-        main(gb_url, "gb", 2)
-        main(mq_url, "mq", 2)
-    except KeyboardInterrupt:
-        print("\nScraping interrupted by user")
-        sys.exit(1)
+    for type, novel in novels.items():
+        main(novel.jj, type, pages=3)
