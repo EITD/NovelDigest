@@ -52,6 +52,12 @@ def scrape_pages(base_url, start=1, end=10, delay=1.0):
 			time.sleep(delay)
 			continue
 
+		if not html:
+			print(f"  Empty response for page {page}, skipping")
+			results[page] = []
+			time.sleep(delay)
+			continue
+
 		soup = BeautifulSoup(html, "html.parser")
 		page_items = []
 
