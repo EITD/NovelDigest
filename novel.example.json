@@ -1,0 +1,9 @@
+{
+    "gb": {
+        "jj": "https://www.jjwxc.net/bookbase.php?yc1=1&xx=1&sortType=1",
+        "jj_page": 3,
+        "cp": "https://www.gongzicp.com/home/indexType?a=74&f=4&o=0",
+        "cp_page": 10,
+        "prompt": "筛选出所有gb小说，将标题、作者、简介提取出来，每行为一条记录，格式为{title:'', author:'', intro:''}，不要包含其他内容。"
+    }
+}
