@@ -1,6 +1,6 @@
 # NovelDigest
 
-每日自动抓取 [jjwxc.net](https://www.jjwxc.net)（晋江文学城）和 [gongzicp.com](https://www.gongzicp.com)（长佩文学）的最新更新小说，通过大模型（Gemini）筛选出符合你个人偏好的作品，并将结果发送到你的邮箱。项目通过 GitHub Actions 实现全自动化.
+每日自动抓取 [jjwxc.net](https://www.jjwxc.net)（晋江文学城）和 [gongzicp.com](https://www.gongzicp.com)（长佩文学）的最新更新小说，通过大模型（Gemini）筛选出符合你个人偏好的作品，并将结果发送到你的邮箱。项目通过 GitHub Actions 实现全自动化。
 
 
 ## 配置
