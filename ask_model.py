@@ -60,7 +60,7 @@ def save_response(text, type, filename):
         print('Format check failed for the following lines (line number: content):')
         for ln, content in errors:
             print(f"{ln}: {content}")
-        print('No file written. Please ensure the model output strictly uses the format {title:\'..\', author:\'..\', intro:\'..\'} with single quotes as shown.')
+        print('No file written. Please ensure the model output strictly uses the json format for records.')
     else:
         out_path = pathlib.Path(f'{type}/selected_{filename}')
         out_path.write_text(json.dumps(records, ensure_ascii=False, indent=2))

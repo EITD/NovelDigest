@@ -32,7 +32,7 @@ def fetch_rendered(url, timeout=15000):
 	except Exception:
 		return None
 
-def scrape_pages(base_url, start=1, end=10, delay=1.0):
+def scrape_pages(base_url, start, end, delay=1.0):
 	session = requests.Session()
 	session.headers.update(
 		{
@@ -118,8 +118,8 @@ def save_results(data, out_path):
 	print(f"Saved links to {out_path}")
 
 
-def main(base_url, type):
-	books = scrape_pages(base_url, 1, 10, delay=1.0)
+def main(base_url, type, pages):
+	books = scrape_pages(base_url, 1, pages, delay=1.0)
 	if not os.path.exists(type):
 		os.makedirs(type)
 	out = os.path.join(os.path.dirname(__file__), f"{type}/novels_cp.json")
@@ -127,4 +127,4 @@ def main(base_url, type):
 
 if __name__ == "__main__":
 	for type, novel in novels.items():
-	    main(novel.cp, type)
+	    main(novel.cp, type, pages=novel.cp_page)

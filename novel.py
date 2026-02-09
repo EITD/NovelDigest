@@ -7,14 +7,18 @@ import os
 @dataclass
 class Novel:
     jj: str
+    jj_page: int
     cp: str
+    cp_page: int
     prompt: str
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Novel":
         return cls(
             jj=data.get("jj", ""),
+            jj_page=data.get("jj_page", 3),
             cp=data.get("cp", ""),
+            cp_page=data.get("cp_page", 10),
             prompt=data.get("prompt", ""),
         )
 

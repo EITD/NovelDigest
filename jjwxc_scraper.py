@@ -1,3 +1,12 @@
+"""
+This file is adapted from:
+Source: https://github.com/dev-chenxing/jjwxc-scraper/blob/main/jjwxc_scraper.py
+Original Author: dev-chenxing (https://github.com/dev-chenxing)
+
+Modified by: EITD
+Date: 2026-02-09
+Description: Keep extracting novel metadata from jjwxc.net, but remove the chapter details. The output JSON will contain a list of novels with their metadata, but no chapter information.
+"""
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -123,7 +132,7 @@ def scrape_novel(url):
     return novel
 
 
-def main(base_url, type, pages=3):
+def main(base_url, type, pages):
     novels = []
     for page_num in range(1, pages + 1):
         url = f"{base_url}&page={page_num}"
@@ -154,4 +163,4 @@ def main(base_url, type, pages=3):
 
 if __name__ == "__main__":
     for type, novel in novels.items():
-        main(novel.jj, type, pages=3)
+        main(novel.jj, type, pages=novel.jj_page)
