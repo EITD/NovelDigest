@@ -118,6 +118,11 @@ def main(base_url, type, pages):
 			out = os.path.join(out_dir, f"novels_cp_{page}.json")
 			save_results(page_items, out)
 			page_items = []  # reset for next batch
+	
+	# Save any remaining items after the loop
+	if page_items:
+		out = os.path.join(out_dir, f"novels_cp_{pages}.json")
+		save_results(page_items, out)
 
 
 if __name__ == "__main__":
