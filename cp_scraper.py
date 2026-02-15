@@ -121,7 +121,7 @@ def main(base_url, type, pages):
 	
 	# Save any remaining items after the loop
 	if page_items:
-		out = os.path.join(out_dir, f"novels_cp_{pages}.json")
+		out = os.path.join(out_dir, f"novels_cp_{page}.json")
 		save_results(page_items, out)
 
 
