@@ -133,10 +133,12 @@ def scrape_novel(url):
 
 
 def main(base_url, type, pages):
-    novels = []
+    out_dir = os.path.join(os.path.dirname(__file__), type, "jj")
+    os.makedirs(out_dir, exist_ok=True)
+
     for page_num in range(1, pages + 1):
         url = f"{base_url}&page={page_num}"
-
+        novels = []
         try:
             print(f"Scraping page {page_num}/{pages}...")
             novel_links = get_novel_links(url)
@@ -144,22 +146,17 @@ def main(base_url, type, pages):
                 try:
                     novel_data = scrape_novel(link)
                     novels.append(novel_data)
-                    # Random delay between novels
-                    time.sleep(random.uniform(1, 3))
                 except Exception as e:
                     print(f"Error processing novel {link}: {str(e)}")
                     continue
         except Exception as e:
             print(f"Error scraping page {page_num}: {str(e)}")
             continue
+        out_path = os.path.join(out_dir, f"novels_jj_{page_num}.json")
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(novels, f, ensure_ascii=False, indent=2)
 
-   # Save to JSON
-    if not os.path.exists(type):
-        os.makedirs(type)
-    with open(f"{type}/novels_jj.json", "w", encoding="utf-8") as f:
-        json.dump(novels, f, ensure_ascii=False, indent=2)
-
-    print(f"Scraping completed. Data saved to {type}/novels_jj.json")
+    print(f"Scraping completed. Data saved to {out_dir}")
 
 if __name__ == "__main__":
     for type, novel in novels.items():
