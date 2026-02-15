@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: model/free_model
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -35,9 +37,9 @@ jobs:
           NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
         run: python3 cp_scraper.py
 
-      - name: Run model extraction
+      - name: Run free model extraction
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
         run: python3 ask_model.py
 
