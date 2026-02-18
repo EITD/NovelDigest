@@ -16,6 +16,10 @@ import random
 from urllib.parse import urlparse, parse_qs
 from novel import load_data
 
+
+def clean_text(text):
+    return " ".join(text.replace("\r", " ").replace("\n", " ").split())
+
 novels = load_data() # Dict[str, Novel]
 
 HEADERS = {
@@ -82,9 +86,9 @@ def scrape_novel(url):
         ],  # 内容标签
         "characters": [],  # 主角
         "themes": "",  # 立意
-        "summary": soup.find("div", id="novelintro")
-        .get_text(separator="\n")
-        .strip(),  # 文案
+        "summary": clean_text(
+            soup.find("div", id="novelintro").get_text(separator="\n").strip()
+        ),  # 文案
         "status": soup.find("span", itemprop="updataStatus").text.strip(),
         "word_count": soup.find("span", itemprop="wordCount").text.strip(),
         "collected_count": soup.find(
