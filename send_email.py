@@ -65,6 +65,9 @@ def main(types):
         found = []
         if os.path.isdir(type_dir):
             for fname in sorted(os.listdir(type_dir)):
+                fpath = os.path.join(type_dir, fname)
+                if not os.path.isfile(fpath):
+                    continue
                 if fname.startswith("selected") and fname.endswith(".json"):
                     found.append(os.path.join(type_dir, fname))
 
