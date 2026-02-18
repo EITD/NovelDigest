@@ -71,4 +71,4 @@ def save_response(text, type, filename):
 
 if __name__ == "__main__":
     for type, novel in novels.items():
-        response_text = ask_model(f"{type}/", novel.prompt, category=type)
+        ask_model(f"{type}/", novel.prompt, category=type)
