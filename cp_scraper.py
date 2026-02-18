@@ -3,7 +3,6 @@ import time
 import os
 from urllib.parse import urljoin
 import re
-
 import requests
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
@@ -11,6 +10,9 @@ from novel import load_data
 
 novels = load_data()  # Dict[str, Novel]
 BASE = "https://www.gongzicp.com/"
+
+def clean_text(text):
+	return re.sub(r"\s+", " ", text).strip()
 
 def fetch_rendered(url, timeout=15000):
 	"""Use Playwright to render the page and return HTML, or None if unavailable."""
@@ -56,7 +58,7 @@ def scrape_page(html):
 
 		# info/summary
 		info_el = item.find("p", class_="novel-info")
-		summary = info_el.get_text(" ", strip=True) if info_el else ""
+		summary = clean_text(info_el.get_text(" ", strip=True)) if info_el else ""
 
 		# author
 		author_el = item.find("a", class_=lambda x: x and "novel-author" in x)
@@ -118,6 +120,10 @@ def main(base_url, type, pages):
 			out = os.path.join(out_dir, f"novels_cp_{page}.json")
 			save_results(page_items, out)
 			page_items = []  # reset for next batch
+	
+	if page_items:
+		out = os.path.join(out_dir, f"novels_cp_{page}.json")
+		save_results(page_items, out)
 
 
 if __name__ == "__main__":
