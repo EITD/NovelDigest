@@ -39,6 +39,7 @@ jobs:
 
       - name: Run free model extraction
         env:
+          MODEL_PROVIDER: openrouter
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           NOVEL_JSON: ${{ secrets.NOVEL_JSON }}
         run: python3 ask_model.py

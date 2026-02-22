@@ -6,6 +6,12 @@ from dotenv import load_dotenv
 import yagmail
 from novel import load_data
 
+if os.path.exists("config.env"):
+    try:
+        load_dotenv("config.env", override=False)
+    except TypeError:
+        load_dotenv("config.env")
+
 novels = load_data()  # Dict[str, Novel]
 
 def load_novels(path):
@@ -73,6 +79,8 @@ def main(types):
 
         for path in found:
             books = load_novels(path)
+            if not books:
+                continue
             basename = os.path.splitext(os.path.basename(path))[0]
             title = f"{t} {basename}"
             sections_text.append(format_text(books, title=title))
@@ -82,13 +90,8 @@ def main(types):
     # join HTML sections with a horizontal rule
     combined_html = "<hr/>".join(sections_html)
 
-    if os.path.exists("config.env"):
-        try:
-            load_dotenv("config.env", override=False)
-        except TypeError:
-            load_dotenv("config.env")
-    smtp_user = os.environ.get("QQ_EMAIL")
-    smtp_pass = os.environ.get("QQ_PASS")
+    smtp_user = os.getenv("QQ_EMAIL")
+    smtp_pass = os.getenv("QQ_PASS")
 
     if args.dry_run:
         print("--- Plain text ---\n")

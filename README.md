@@ -1,6 +1,6 @@
 # NovelDigest
 
-每日自动抓取 [jjwxc.net](https://www.jjwxc.net)（晋江文学城）和 [gongzicp.com](https://www.gongzicp.com)（长佩文学）的最新更新/热门排序小说，通过大模型（Gemini）筛选出符合你个人偏好的作品，并将结果发送到你的邮箱。项目通过 GitHub Actions 实现全自动化。
+每日自动抓取 [jjwxc.net](https://www.jjwxc.net)（晋江文学城）和 [gongzicp.com](https://www.gongzicp.com)（长佩文学）的最新更新/热门排序小说，通过大模型（Gemini/OpenRouter）筛选出符合你个人偏好的作品，并将结果发送到你的邮箱。项目通过 GitHub Actions 实现全自动化。
 
 
 ## 配置
@@ -10,16 +10,20 @@
 复制 `config.example.env` 为 `config.env`（本地运行时使用）：
 
 ```env
+MODEL_PROVIDER="openrouter"  # openrouter 或 gemini
 GEMINI_API_KEY="你的 Gemini API Key"
+OPENROUTER_API_KEY="你的 OpenRouter API Key"
 QQ_EMAIL="你的 QQ 邮箱地址"
 QQ_PASS="QQ 邮箱授权码（非登录密码）"
 ```
 
-- `GEMINI_API_KEY` — Gemini API 密钥，用于大模型筛选（有免费额度）
+- `MODEL_PROVIDER` — 模型提供方，支持 `openrouter` 或 `gemini`
+- `GEMINI_API_KEY` — Gemini API 密钥
+- `OPENROUTER_API_KEY` — OpenRouter API 密钥（可使用免费模型）
 - `QQ_EMAIL` — 接收邮件的 QQ 邮箱
 - `QQ_PASS` — QQ 邮箱 SMTP 授权码，需在邮箱设置中开启 SMTP 后获取
 
-> GitHub Actions 运行时，在 **Settings → Secrets → Actions** 中配置以上三项。
+> GitHub Actions 运行时，在 **Settings → Secrets → Actions** 中配置所需密钥。
 
 ### novel.json
 
@@ -47,9 +51,9 @@ QQ_PASS="QQ 邮箱授权码（非登录密码）"
 
 | 文件 | 说明 |
 |------|------|
-| `jjwxc_scraper.py` | 抓取晋江小说列表（≥ 2 万字），保存到 `{分类}/novels_jj.json` |
-| `cp_scraper.py` | 抓取长佩小说列表，保存到 `{分类}/novels_cp.json` |
-| `ask_model.py` | 通过 Gemini 按 prompt 筛选，输出 `{分类}/selected_*.json` |
+| `jjwxc_scraper.py` | 抓取晋江小说列表（≥ 2 万字），保存到 `{分类}/{jj}/novels_*.json` |
+| `cp_scraper.py` | 抓取长佩小说列表，保存到 `{分类}/{cp}/novels_*.json` |
+| `ask_model.py` | 通过统一模型接口（Gemini/OpenRouter）按 prompt 筛选，输出 `{分类}/selected_*.json` |
 | `send_email.py` | 汇总筛选结果发送邮件，支持 `--dry-run` 仅打印 |
 
 ## 安装依赖
