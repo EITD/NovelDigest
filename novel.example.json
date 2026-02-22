@@ -4,6 +4,6 @@
         "jj_page": 3,
         "cp": "https://www.gongzicp.com/home/indexType?a=74&f=4&o=0",
         "cp_page": 10,
-        "prompt": "筛选出所有gb小说，将标题、作者、简介提取出来，每行为一条记录，格式为{title:'', author:'', intro:''}，不要包含其他内容。"
+        "prompt": "筛选出所有gb小说，概括cp属性，50字以内概括剧情。每行为一本小说，输出格式为title:'', author:'', intro:''，不要包含其他内容。"
     }
 }

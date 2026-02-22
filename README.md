@@ -36,14 +36,14 @@ QQ_PASS="QQ 邮箱授权码（非登录密码）"
         "jj_page": 3,
         "cp": "https://www.gongzicp.com/home/indexType?a=74&f=4&o=0",
         "cp_page": 10,
-        "prompt": "筛选出所有gb小说，将标题、作者、简介提取出来，每行为一条记录，格式为{title:'', author:'', intro:''}，不要包含其他内容。"
+        "prompt": "筛选出所有gb小说，概括cp属性，50字以内概括剧情。每行为一本小说，输出格式为title:'', author:'', intro:''，不要包含其他内容。"
     }
 }
 ```
 
 - **url** — 在网站调整排序/标签后复制网址即可
 - **page** — 免费用户 token 有限，不建议过多
-- **prompt** — 可自由修改筛选条件，但输出格式必须为每行一条：`{title:'', author:'', intro:''}`，不符合格式的行会被丢弃
+- **prompt** — 可自由修改筛选条件，但输出格式必须为每行一条：`title:'', author:'', intro:''`，不符合格式的行会被丢弃
 
 > 不想暴露此文件可将内容作为 `NOVEL_JSON` secret 配置。
 
