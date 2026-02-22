@@ -25,7 +25,7 @@ class Novel:
 
 def load_data(path: str = None) -> Dict[str, Novel]:
     """Load novel data from NOVEL_JSON env var or novel.json file."""
-    env_json = os.environ.get("NOVEL_JSON")
+    env_json = os.getenv("NOVEL_JSON")
     if env_json:
         raw = json.loads(env_json)
     else:
